@@ -40,10 +40,13 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Use kubeconfig stored as Jenkins credentials for kubectl commands
-                    withCredentials([file(credentialsId: kubeConfigId, variable: 'KUBECONFIG')]) {
+                    // Use the kubeconfig stored as "Secret Text" in Jenkins
+                    withCredentials([string(credentialsId: kubeConfigId, variable: 'KUBECONFIG_CONTENT')]) {
+                        // Write the kubeconfig content (string) to a temporary file
+                        writeFile file: '/tmp/kubeconfig', text: "${KUBECONFIG_CONTENT}"
+                        
                         // Use the kubeconfig for deploying with kubectl
-                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
+                        sh "kubectl --kubeconfig=/tmp/kubeconfig apply -f deployment.yaml"
                     }
                 }
             }
