@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from GitHub or another source
-                git 'https://github.com/SangeethaSankar1501/Pipelinedemo.git'
+                git branch: 'main', url: 'https://github.com/SangeethaSankar1501/Pipelinedemo.git'
             }
         }
 
