@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "sangeetha1501/simplewebapp"
         DOCKER_TAG = "latest"
+        kubeConfigId = 'my-kubeconfig' 
     }
 
     stages {
@@ -33,6 +34,17 @@ pipeline {
 
                     // Push the Docker image to Docker Hub
                     sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Use kubeconfig stored as Jenkins credentials for kubectl commands
+                    withCredentials([file(credentialsId: kubeConfigId, variable: 'KUBECONFIG')]) {
+                        // Use the kubeconfig for deploying with kubectl
+                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
+                    }
                 }
             }
         }
