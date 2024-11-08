@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "sangeetha1501/simplewebapp"
         DOCKER_TAG = "latest"
-        kubeConfigId = '/home/sakshara479/.kube/config' 
+        KUBECONFIG = '/home/sakshara479/.kube/config' 
     }
 
     stages {
