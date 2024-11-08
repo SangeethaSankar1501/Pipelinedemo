@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "sangeetha1501/simplewebapp"
         DOCKER_TAG = "latest"
-        kubeConfigId = 'my-kubeconfig' 
+        kubeConfigId = '/home/sakshara479/.kube/config' 
     }
 
     stages {
@@ -40,13 +40,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Use the kubeconfig stored as "Secret Text" in Jenkins
-                    withCredentials([string(credentialsId: kubeConfigId, variable: 'KUBECONFIG_CONTENT')]) {
-                        // Write the kubeconfig content (string) to a temporary file
-                        writeFile file: '/tmp/kubeconfig', text: KUBECONFIG_CONTENT
-                        
-                        // Use the kubeconfig for deploying with kubectl
-                        sh "kubectl --kubeconfig=/tmp/kubeconfig apply -f deployment.yaml"
+                        sh "kubectl apply -f deployment.yaml"
                     }
                 }
             }
